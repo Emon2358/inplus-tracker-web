@@ -7,30 +7,30 @@
     html, body { margin: 0; height: 100%; background: #000; }
     #screen { width: 100%; height: 100%; display: block; }
   </style>
+  <!-- favicon 404 を防ぎたい場合はここに置く -->
+  <!-- <link rel="icon" href="favicon.ico"> -->
 </head>
 <body>
   <canvas id="screen"></canvas>
 
-  <!-- v86 本体 -->
-  <script src="https://unpkg.com/v86/build/libv86.js"></script>
+  <!-- libv86.js は必ず先に読み込む -->
+  <script src="https://unpkg.com/v86@latest/build/libv86.js"></script>
   <script>
-    // Internet Archive の ISO URL（ファイル名は適宜確認）
+    // Internet Archive の ISO URL
     const iaIso = "https://archive.org/download/Win98SEOEMJapanese/ja_win98_se_oem.iso";
-    // CORS プロキシ経由で取得
+    // CORS プロキシ経由 URL
     const cdromUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(iaIso);
 
-    const emulator = new V86Starter({
-      wasm_path: "https://unpkg.com/v86/build/v86.wasm",
+    // V86Starter → V86 に変更
+    const emulator = new V86({
+      wasm_path: "https://unpkg.com/v86@latest/build/v86.wasm",
       memory_size: 128 * 1024 * 1024,
       screen_container: document.getElementById("screen"),
-      bios:    { url: "https://unpkg.com/v86/build/bios/seabios.bin" },
-      vga_bios:{ url: "https://unpkg.com/v86/build/bios/vgabios.bin" },
-
-      // CD-ROM に CORS プロキシ経由の ISO を指定
-      cdrom: { url: cdromUrl }
+      bios:    { url: "https://unpkg.com/v86@latest/build/bios/seabios.bin" },
+      vga_bios:{ url: "https://unpkg.com/v86@latest/build/bios/vgabios.bin" },
+      cdrom:   { url: cdromUrl }
     });
 
-    // 起動ログをブラウザコンソールへ出力
     emulator.add_listener("serial0-output-char", char => console.log(char));
   </script>
 </body>
